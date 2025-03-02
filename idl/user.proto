@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "./user";
+
+service UserService {
+  rpc Register(RegisterRequest) returns (RegisterResponse) {}
+  rpc Login(LoginRequest) returns (LoginResponse) {}
+  rpc EnableTwoFactor(EnableTwoFactorRequest) returns (EnableTwoFactorResponse) {}
+  rpc VerifyTwoFactor(VerifyTwoFactorRequest) returns (VerifyTwoFactorResponse) {}
+}
+
+message RegisterRequest {
+  string username = 1;
+  string password = 2;
+  string email = 3;
+  string phone = 4;
+}
+
+message RegisterResponse {
+  int32 user_id = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  bool success = 1;
+  string error_message = 2;
+  string token = 3;
+  bool two_factor_required = 4;
+}
+
+message EnableTwoFactorRequest {
+  string username = 1;
+}
+
+message EnableTwoFactorResponse {
+  bool success = 1;
+  string error_message = 2;
+  string secret = 3;
+  repeated string backup_codes = 4;
+}
+
+message VerifyTwoFactorRequest {
+  string username = 1;
+  string code = 2;
+}
+
+message VerifyTwoFactorResponse {
+  bool success = 1;
+  string error_message = 2;
+  string token = 3;
+}

@@ -1,0 +1,22 @@
+service_name: "cart-service"
+service_version: "1.0.0"
+
+database:
+  host: "localhost"
+  port: 5432
+  name: "cart_db"
+  user: "postgres"
+  password: "postgres"
+
+registration:
+  etcd:
+    endpoints:
+      - "localhost:2379"
+    dial_timeout: 5s
+
+cart:
+  max_items_per_cart: 50
+  default_page_size: 10
+  max_query_limit: 100
+  item_quantity_limit: 99
+  price_precision: 2

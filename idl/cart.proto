@@ -1,0 +1,121 @@
+syntax = "proto3";
+
+package cart;
+
+option go_package = "./cart";
+
+// 购物车服务定义
+service CartService {
+  // 创建购物车
+  rpc CreateCart(CreateCartRequest) returns (CreateCartResponse) {}
+  
+  // 清空购物车
+  rpc ClearCart(ClearCartRequest) returns (ClearCartResponse) {}
+  
+  // 获取购物车信息
+  rpc GetCart(GetCartRequest) returns (GetCartResponse) {}
+  
+  // 添加商品到购物车
+  rpc AddToCart(AddToCartRequest) returns (AddToCartResponse) {}
+  
+  // 从购物车移除商品
+  rpc RemoveFromCart(RemoveFromCartRequest) returns (RemoveFromCartResponse) {}
+  
+  // 更新购物车商品数量
+  rpc UpdateCartItem(UpdateCartItemRequest) returns (UpdateCartItemResponse) {}
+}
+
+// 购物车商品项
+message CartItem {
+  int32 id = 1;
+  int32 product_id = 2;
+  string product_name = 3;
+  double price = 4;
+  int32 quantity = 5;
+  string image_url = 6;
+  string created_at = 7;
+}
+
+// 购物车信息
+message Cart {
+  int32 id = 1;
+  int32 user_id = 2;
+  repeated CartItem items = 3;
+  double total_price = 4;
+  int32 total_quantity = 5;
+  string created_at = 6;
+  string updated_at = 7;
+}
+
+// 创建购物车请求
+message CreateCartRequest {
+  int32 user_id = 1;
+}
+
+// 创建购物车响应
+message CreateCartResponse {
+  int32 cart_id = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// 清空购物车请求
+message ClearCartRequest {
+  int32 cart_id = 1;
+}
+
+// 清空购物车响应
+message ClearCartResponse {
+  bool success = 1;
+  string error_message = 2;
+}
+
+// 获取购物车信息请求
+message GetCartRequest {
+  int32 cart_id = 1;
+}
+
+// 获取购物车信息响应
+message GetCartResponse {
+  Cart cart = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// 添加商品到购物车请求
+message AddToCartRequest {
+  int32 cart_id = 1;
+  int32 product_id = 2;
+  int32 quantity = 3;
+}
+
+// 添加商品到购物车响应
+message AddToCartResponse {
+  bool success = 1;
+  string error_message = 2;
+}
+
+// 从购物车移除商品请求
+message RemoveFromCartRequest {
+  int32 cart_id = 1;
+  int32 cart_item_id = 2;
+}
+
+// 从购物车移除商品响应
+message RemoveFromCartResponse {
+  bool success = 1;
+  string error_message = 2;
+}
+
+// 更新购物车商品数量请求
+message UpdateCartItemRequest {
+  int32 cart_id = 1;
+  int32 cart_item_id = 2;
+  int32 quantity = 3;
+}
+
+// 更新购物车商品数量响应
+message UpdateCartItemResponse {
+  bool success = 1;
+  string error_message = 2;
+}

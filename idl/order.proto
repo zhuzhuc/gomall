@@ -1,0 +1,164 @@
+syntax = "proto3";
+
+package order;
+
+option go_package = "github.com/bytedance-youthcamp/demo/api/order";
+
+// 订单服务定义
+service OrderService {
+  // 创建订单
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse) {}
+  
+  // 结算订单
+  rpc SettleOrder(SettleOrderRequest) returns (SettleOrderResponse) {}
+  
+  // 获取订单详情
+  rpc GetOrderDetails(GetOrderDetailsRequest) returns (GetOrderDetailsResponse) {}
+  
+  // 获取订单信息
+  rpc GetOrder(GetOrderRequest) returns (GetOrderResponse) {}
+  
+  // 获取用户所有订单
+  rpc GetUserOrders(GetUserOrdersRequest) returns (GetUserOrdersResponse) {}
+  
+  // 更新订单信息
+  rpc UpdateOrder(UpdateOrderRequest) returns (UpdateOrderResponse) {}
+  
+  // 取消订单
+  rpc CancelOrder(CancelOrderRequest) returns (CancelOrderResponse) {}
+}
+
+// 订单状态枚举
+enum OrderStatus {
+  PENDING = 0;      // 待支付
+  PAID = 1;         // 已支付
+  SHIPPING = 2;     // 配送中
+  COMPLETED = 3;    // 已完成
+  CANCELLED = 4;    // 已取消
+  REFUNDING = 5;    // 退款中
+  REFUNDED = 6;     // 已退款
+}
+
+// 订单项目
+message OrderItem {
+  int32 product_id = 1;
+  string product_name = 2;
+  int32 quantity = 3;
+  double price = 4;
+}
+
+// 订单信息
+message Order {
+  int32 id = 1;
+  int32 user_id = 2;
+  repeated OrderItem items = 3;
+  double total_amount = 4;
+  OrderStatus status = 5;
+  string address = 6;        // 收货地址
+  string contact_name = 7;   // 联系人
+  string contact_phone = 8;  // 联系电话
+  string created_at = 9;
+  string updated_at = 10;
+  string paid_at = 11;       // 支付时间
+  string cancelled_at = 12;  // 取消时间
+  string completed_at = 13;  // 完成时间
+  string cancel_reason = 14; // 取消原因
+  int64 auto_cancel_time = 15; // 自动取消时间戳（毫秒）
+}
+
+// 创建订单请求
+message CreateOrderRequest {
+  int32 user_id = 1;
+  repeated OrderItem items = 2;
+  double total_price = 3;
+}
+
+// 创建订单响应
+message CreateOrderResponse {
+  bool success = 1;
+  int32 order_id = 2;
+  string error_message = 3;
+}
+
+// 结算订单请求
+message SettleOrderRequest {
+  int32 order_id = 1;
+  int32 user_id = 2;
+  string payment_method = 3;
+}
+
+// 结算订单响应
+message SettleOrderResponse {
+  bool success = 1;
+  int32 order_id = 2;
+  OrderStatus status = 3;
+  string error_message = 4;
+}
+
+// 获取订单详情请求
+message GetOrderDetailsRequest {
+  int32 order_id = 1;
+  int32 user_id = 2;
+}
+
+// 获取订单详情响应
+message GetOrderDetailsResponse {
+  bool success = 1;
+  Order order = 2;
+  string error_message = 3;
+}
+
+// 获取订单信息请求
+message GetOrderRequest {
+  int32 order_id = 1;
+}
+
+// 获取订单信息响应
+message GetOrderResponse {
+  Order order = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+// 获取用户所有订单请求
+message GetUserOrdersRequest {
+  int32 user_id = 1;
+  int32 page = 2;       // 分页参数
+  int32 page_size = 3;  // 每页数量
+  OrderStatus status = 4; // 可选，按状态筛选
+}
+
+// 获取用户所有订单响应
+message GetUserOrdersResponse {
+  repeated Order orders = 1;
+  int32 total = 2;      // 总订单数
+  bool success = 3;
+  string error_message = 4;
+}
+
+// 更新订单信息请求
+message UpdateOrderRequest {
+  int32 order_id = 1;
+  string address = 2;        // 收货地址
+  string contact_name = 3;   // 联系人
+  string contact_phone = 4;  // 联系电话
+  OrderStatus status = 5;    // 订单状态
+}
+
+// 更新订单信息响应
+message UpdateOrderResponse {
+  bool success = 1;
+  string error_message = 2;
+}
+
+// 取消订单请求
+message CancelOrderRequest {
+  int32 order_id = 1;
+  string cancel_reason = 2;  // 取消原因
+}
+
+// 取消订单响应
+message CancelOrderResponse {
+  bool success = 1;
+  string error_message = 2;
+}

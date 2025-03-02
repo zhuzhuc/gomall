@@ -1,0 +1,21 @@
+service_name: "order_service"
+service_version: "1.0.0"
+
+database:
+  host: "localhost"
+  port: 5432
+  name: "demo"
+  user: "postgres"
+  password: "postgres"
+
+registration:
+  etcd:
+    endpoints:
+      - "localhost:2379"
+    dial_timeout: 5s
+
+order:
+  default_page_size: 10
+  max_query_limit: 100
+  auto_cancel_minutes: 30  # 订单自动取消时间（分钟）
+  price_precision: 2       # 价格精度（小数位数）

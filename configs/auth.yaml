@@ -1,0 +1,17 @@
+auth:
+  jwt:
+    secret_key: "your_very_secret_key_here"
+    token_ttl: 1h
+    issuer: "auth_service"
+
+  security:
+    token_blacklist_max_size: 1000
+    token_blacklist_cleanup_interval: 10m
+
+  registration:
+    service_name: "auth_service"
+    service_version: "v1.0.0"
+    etcd:
+      endpoints: 
+        - "localhost:2379"
+      dial_timeout: 5s

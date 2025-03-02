@@ -1,0 +1,27 @@
+# Product Service Configuration
+service_name: "product-service"
+service_version: "1.0.0"
+
+database:
+  host: "localhost"
+  port: 5432
+  name: "demo"
+  user: "postgres"
+  password: "postgres"
+
+registration:
+  etcd:
+    endpoints: ["localhost:2379"]
+    dial_timeout: 5s
+
+product:
+  # Maximum number of products to return in a single query
+  max_query_limit: 100
+  # Default page size for paginated queries
+  default_page_size: 20
+  # Enable product image validation
+  image_validation_enabled: true
+  # Maximum allowed image size in bytes (5MB)
+  max_image_size: 5242880
+  # Allowed image formats
+  allowed_image_formats: ["jpg", "jpeg", "png", "webp"]

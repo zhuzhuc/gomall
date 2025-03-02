@@ -1,0 +1,34 @@
+# 用户服务配置
+service_name: user_service
+service_version: v1.0.0
+
+# 数据库配置
+database:
+  driver: mysql
+  host: 127.0.0.1  # 使用 127.0.0.1 而不是 localhost
+  port: 3306
+  name: user_db
+  user: root  
+  password: "root"  
+  max_open_connections: 25
+  max_idle_connections: 25
+  connection_max_lifetime: 5m
+
+# 密码加密配置
+password:
+  salt: bytedance_youthcamp_salt
+  hash_iterations: 10000
+
+# 服务注册配置
+registration:
+  etcd:
+    endpoints:
+      - localhost:2379
+    dial_timeout: 5s
+
+# 安全配置
+security:
+  max_login_attempts: 5
+  login_attempt_reset_duration: 30m
+  password_min_length: 8
+  password_complexity_enabled: true

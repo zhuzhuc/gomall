@@ -1,0 +1,11 @@
+go 1.24
+
+use (
+	.
+	./api/user
+	./api/order
+	./internal/config
+	./internal/service/auth
+	./internal/service/order
+	./internal/repository
+)

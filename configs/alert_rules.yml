@@ -1,0 +1,52 @@
+groups:
+- name: user_service_alerts
+  rules:
+  # 高失败率告警
+  - alert: HighUserRegistrationFailureRate
+    expr: rate(user_registrations_total{status="failure"}[5m]) / rate(user_registrations_total[5m]) > 0.1
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "高用户注册失败率"
+      description: "最近5分钟内用户注册失败率超过10%"
+
+  # 登录失败告警
+  - alert: HighLoginFailureRate
+    expr: rate(user_logins_total{status="failure"}[5m]) / rate(user_logins_total[5m]) > 0.05
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "高登录失败率"
+      description: "最近5分钟内登录失败率超过5%"
+
+  # 异常登录尝试告警
+  - alert: SuspiciousLoginAttempts
+    expr: sum(increase(user_login_failures_total[1h])) > 100
+    for: 1h
+    labels:
+      severity: critical
+    annotations:
+      summary: "可疑登录尝试"
+      description: "1小时内登录失败次数超过100次，可能存在暴力破解"
+
+  # 服务性能告警
+  - alert: SlowUserServiceRequests
+    expr: histogram_quantile(0.95, rate(user_service_request_duration_seconds_bucket[5m])) > 0.5
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "用户服务响应缓慢"
+      description: "95%的请求响应时间超过500毫秒"
+
+  # 服务可用性告警
+  - alert: UserServiceUnavailable
+    expr: up{job="user-service"} == 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "用户服务不可用"
+      description: "用户服务已停止运行超过5分钟"

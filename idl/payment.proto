@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package payment;
+
+option go_package = "github.com/bytedance-youthcamp/demo/api/payment";
+
+enum PaymentStatus {
+    PAYMENT_STATUS_PENDING = 0;
+    PAYMENT_STATUS_SUCCESS = 1;
+    PAYMENT_STATUS_FAILED = 2;
+    PAYMENT_STATUS_REFUNDED = 3;
+}
+
+enum PaymentMethod {
+    PAYMENT_METHOD_ALIPAY = 0;
+    PAYMENT_METHOD_WECHAT = 1;
+    PAYMENT_METHOD_CREDIT_CARD = 2;
+}
+
+message CreatePaymentRequest {
+    int32 order_id = 1;
+    double amount = 2;
+    PaymentMethod method = 3;
+}
+
+message CreatePaymentResponse {
+    string payment_id = 1;
+    string payment_url = 2;
+    bool success = 3;
+}
+
+message QueryPaymentRequest {
+    string payment_id = 1;
+}
+
+message QueryPaymentResponse {
+    string payment_id = 1;
+    int32 order_id = 2;
+    double amount = 3;
+    PaymentStatus status = 4;
+    PaymentMethod method = 5;
+    string transaction_id = 6;
+    bool success = 7;
+}
+
+message PaymentNotificationRequest {
+    string payment_id = 1;
+    int32 order_id = 2;
+    PaymentStatus status = 3;
+    string transaction_id = 4;
+}
+
+message PaymentNotificationResponse {
+    bool success = 1;
+}
+
+message SimulatePaymentCallbackRequest {
+    string payment_id = 1;
+    PaymentStatus status = 2;
+}
+
+message SimulatePaymentCallbackResponse {
+    bool success = 1;
+}
+
+service PaymentService {
+    rpc CreatePayment(CreatePaymentRequest) returns (CreatePaymentResponse);
+    rpc QueryPayment(QueryPaymentRequest) returns (QueryPaymentResponse);
+    rpc ProcessPaymentNotification(PaymentNotificationRequest) returns (PaymentNotificationResponse);
+    rpc SimulatePaymentCallback(SimulatePaymentCallbackRequest) returns (SimulatePaymentCallbackResponse);
+}
